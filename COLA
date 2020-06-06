@@ -1,0 +1,120 @@
+#include <iostream>
+using namespace std;
+ 
+struct nodo
+{
+    int ticket;
+    struct nodo *sgte;
+};
+ 
+struct cola
+{
+    nodo *delante;
+    nodo *atras  ;
+};
+ 
+void encolar( struct cola &cliente, int valor )
+{
+     struct nodo *aux = new(struct nodo);
+     
+     aux->ticket = valor;
+     aux->sgte = NULL;
+     
+     if( cliente.delante == NULL)
+         cliente.delante = aux;   // encola el primero elemento
+     else
+         (cliente.atras)->sgte = aux;
+         
+     cliente.atras = aux;        // puntero que siempre apunta al ultimo elemento
+     
+}
+ 
+int desencolar( struct cola &cliente )
+{
+     int num ;
+     struct nodo *aux ;
+     
+     aux = cliente.delante;      // aux apunta al inicio de la cola
+     num = aux->ticket;
+     cliente.delante = (cliente.delante)->sgte;
+     delete(aux);          // libera memoria a donde apuntaba aux
+     
+     return num;
+}
+ 
+void muestraCola( struct cola cliente )
+{
+     struct nodo *aux;
+     
+     aux = cliente.delante;
+         
+     while( aux != NULL )
+     {
+            cout<<"   "<< aux->ticket ;
+            aux = aux->sgte;
+     }    
+}
+ 
+void menu()
+{
+    cout<<"\n\t ATENCION AL CLIENTE \n\n";
+    cout<<" 1. # TICKET                               "<<endl;
+    cout<<" 2. ATENDER CLIENTE                            "<<endl;
+    cout<<" 3. MOSTRAR TICKETS                          "<<endl;
+    cout<<" 4. SALIR                                 "<<endl;
+ 
+    cout<<"\n INGRESE OPCION: ";
+}
+ 
+ /*Funcion Principal*/
+int main()
+{
+    struct cola cliente;
+   
+    cliente.delante = NULL;
+    cliente.atras   = NULL;
+   
+   
+    int dato;  // numero a encolar
+    int op;    // opcion del menu
+    int x ;    // numero que devuelve la funcon pop
+   
+    system("color 0b");
+ 
+    do
+    {
+        menu();  cin>> op;
+ 
+        switch(op)
+        {
+            case 1:
+ 
+                 cout<< "\n NUMERO A ENCOLAR: "; cin>> dato;
+                 encolar( cliente, dato );
+                 cout<<"\n\n\t\tNumero " << dato << " encolado...\n\n";
+            break;
+ 
+ 
+            case 2:
+ 
+                 x = desencolar( cliente );
+                 cout<<"\n\n\t\tNumero "<< x <<" desencolado...\n\n";
+            break;
+                 
+ 
+            case 3:
+ 
+                 cout << "\n\n MOSTRANDO COLA\n\n";
+                 if(cliente.delante!=NULL) muestraCola( cliente );
+                 else   cout<<"\n\n\tCola vacia...!"<<endl;
+            break;
+         }
+ 
+        cout<<endl<<endl;
+        system("pause");  system("cls");
+ 
+    }while(op!=5);
+   
+   
+    return 0;
+}
